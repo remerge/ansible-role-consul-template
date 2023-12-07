@@ -1,0 +1,83 @@
+---
+# tasks file for nomad
+
+- name: Import assert.yml
+  ansible.builtin.import_tasks: assert.yml
+  run_once: true
+  delegate_to: localhost
+
+- name: Install consul-template
+  ansible.builtin.package:
+    name: consul-template
+    state: present
+  when:
+    - consul_template_install_package
+
+- name: create consul-template configuration directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "600"
+  with_items:
+    - "{{ consul_template_config_dir }}"
+    - "{{ consul_template_config_dir }}/templates"
+
+- name: configure consul-template
+  block:
+  - name: Copy consul-template service
+    ansible.builtin.copy:
+      src: "files/consul-template.service"
+      dest: "/lib/systemd/system/consul-template.service"
+      mode: "0750"
+    notify:
+      - restart consul-template
+
+  - name: Copy consul-template config
+    ansible.builtin.template:
+      src: templates/consul-template.hcl.j2
+      dest: "{{ consul_template_config_dir }}/config.hcl"
+
+  - name: Copy consul-template items
+    ansible.builtin.copy:
+      src: "{{ item.template_file }}"
+      dest: "{{ item.source }}"
+    with_items: "{{ consul_template_templates_config }}"
+
+  - name: Create list of managed items
+    ansible.builtin.set_fact:
+      managed_config: "{{ managed_config | default([]) + [ (item.destination | dirname) + '.cfg'] }}"
+    with_items: "{{ consul_template_templates_config }}"
+    when:
+      - consul_template_remove_unmanaged is boolean
+      - consul_template_remove_unmanaged is True
+
+  - name: Capture unwanted files
+    ansible.builtin.find:
+      paths: "/etc/haproxy/conf.d/"
+      file_type: file
+      excludes: "{{ managed_config | default([]) }}"
+    register: unwanted_files
+    when:
+      - consul_template_remove_unmanaged is boolean
+      - consul_template_remove_unmanaged is True
+
+  - name: delete unwanted files
+    ansible.builtin.file:
+      path: "{{ item.path }}"
+      state: absent
+    with_items: "{{ unwanted_files['files'] }}"
+    when:
+      - consul_template_remove_unmanaged is boolean
+      - consul_template_remove_unmanaged is True
+  notify:
+    - Test consul-template config
+    - restart consul-template
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Start consul-template
+  ansible.builtin.service:
+    name: nomad
+    state: consul-template
+    enabled: true

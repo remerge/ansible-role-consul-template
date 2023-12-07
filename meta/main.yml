@@ -1,0 +1,8 @@
+---
+galaxy_info:
+  role_name: consul_template
+  description: Ansible Role for Consul-Template
+  license: apache-2.0
+  author: remerge
+  company: remerge.io
+  min_ansible_version: "2.14"
