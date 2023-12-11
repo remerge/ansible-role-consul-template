@@ -8,7 +8,7 @@ consul {
   }
 }
 
-{% for template_item in consul_template_items %}
+{% for template_item in consul_template_templates_config %}
 template {
   source      = "{{ template_item.source }}"
   destination = "{{ template_item.destination }}"

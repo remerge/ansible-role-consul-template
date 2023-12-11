@@ -19,7 +19,7 @@
       - item.source is defined
       - item.source is string
       - item.source is not none
-      - (item.destination is defined
+      - item.destination is defined
       - item.destination is string
       - item.destination is not none
       - item.template_file is defined
@@ -39,4 +39,4 @@
     quiet: yes
   loop: "{{ consul_template_templates_config }}"
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ item.source }}"
