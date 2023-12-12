@@ -45,31 +45,35 @@
 
   - name: Create list of managed items
     ansible.builtin.set_fact:
-      managed_config: "{{ managed_config | default([]) + [ (item.destination | dirname) + '.cfg'] }}"
+      managed_config: "{{ managed_config | default({}) | \
+        combine( { (item.destination | dirname): \
+        managed_config[(item.destination | dirname)] | \
+        default([]) + [item.destination | basename] } ) }}"
     with_items: "{{ consul_template_templates_config }}"
     when:
       - consul_template_remove_unmanaged is true
 
   - name: Capture unwanted files
     ansible.builtin.find:
-      paths: "/etc/haproxy/conf.d/"
+      paths: "{{ item.key }}"
       file_type: file
-      excludes: "{{ managed_config | default([]) }}"
+      excludes: "{{ item.value }}"
     register: unwanted_files
+    loop: "{{ managed_config | dict2items }}"
     when:
-      - consul_template_remove_unmanaged is boolean
       - consul_template_remove_unmanaged is true
 
   - name: delete unwanted files
     ansible.builtin.file:
-      path: "{{ item.path }}"
+      path: "{{ item.1.path }}"
       state: absent
-    with_items: "{{ unwanted_files['files'] }}"
+    loop: "{{ unwanted_files.results | subelements('files') }}"
+    loop_control:
+      label: "{{ item.1.path }}"
     when:
-      - consul_template_remove_unmanaged is boolean
       - consul_template_remove_unmanaged is true
-  notify:
-    - restart consul-template
+    notify:
+      - restart consul-template
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers

@@ -7,6 +7,9 @@ argument_specs:
       Install and configure consul-template on your system.
     author: remerge
     options:
+      consul_address:
+        type: "str"
+        description: "Consul http address"
       consul_template_templates_config:
         type: "list"
         description: "List of configuration for templates"

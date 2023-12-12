@@ -1,4 +1,11 @@
 ---
+- name: assert | Test if consul_address is set correctly
+  ansible.builtin.assert:
+    that:
+      - consul_address is defined
+      - consul_address is str
+    quiet: true
+
 - name: assert | Test if consul_template_install_package is set correctly
   ansible.builtin.assert:
     that:
