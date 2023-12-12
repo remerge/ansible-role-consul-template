@@ -1,4 +1,6 @@
 ---
+# tasks file for nomad
+
 - name: Import assert.yml
   ansible.builtin.import_tasks: assert.yml
   run_once: true
@@ -27,8 +29,6 @@
         src: "files/consul-template.service"
         dest: "/lib/systemd/system/consul-template.service"
         mode: "0750"
-      notify:
-        - restart consul-template
 
     - name: Copy consul-template config
       ansible.builtin.template:
@@ -40,8 +40,6 @@
         src: "{{ item.template_file }}"
         dest: "{{ item.source }}"
       with_items: "{{ consul_template_templates_config }}"
-      notify:
-        - restart consul-template
 
     - name: Create list of managed items
       ansible.builtin.set_fact:
@@ -72,8 +70,8 @@
         label: "{{ item.1.path }}"
       when:
         - consul_template_remove_unmanaged is true
-      notify:
-        - restart consul-template
+  notify:
+    - restart consul-template
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
