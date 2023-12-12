@@ -3,7 +3,7 @@
   ansible.builtin.assert:
     that:
       - consul_address is defined
-      - consul_address is str
+      - consul_address is string
     quiet: true
 
 - name: assert | Test if consul_template_install_package is set correctly
