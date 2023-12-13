@@ -13,7 +13,10 @@ template {
   source      = "{{ template_item.source }}"
   destination = "{{ template_item.destination }}"
   perms       = {{ template_item.perms }}
-  command     = "{{ template_item.command }}"
+  exec {
+      command = [ "{{ template_item.command }}" ]
+      splay = "{{ template_item.splay }}"
+  }
   user        = "{{ template_item.user }}"
   group       = "{{ template_item.group }}"
 }

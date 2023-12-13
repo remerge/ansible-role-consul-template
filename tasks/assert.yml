@@ -43,6 +43,8 @@
       - item.group is defined
       - item.group is string
       - item.group is not none
+      - item.splay is not none
+      - item.splay is string
     quiet: true
   loop: "{{ consul_template_templates_config }}"
   loop_control:
