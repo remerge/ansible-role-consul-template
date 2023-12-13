@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "ansible-role-consul-template"
+version = "0.0.0"
+description = "Ansible role for Consul-template"
+authors = ["Remerge GmbH <core@remerge.io>"]
+
+[tool.poetry.dependencies]
+python = "^3.10, < 3.12"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.11.0"
+flake8 = "^6.1.0"
+flake8-bugbear = "^23.12.2"
+pylint = "^3.0.2"
+tox = "^4.11.4"
+molecule = { extras = ["docker"], version = "^6.0.2" }
+ansible-lint = { version = "^6.22.1", markers = "platform_system != 'Windows'" }
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
