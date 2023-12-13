@@ -1,5 +1,4 @@
 ---
-
 argument_specs:
   main:
     short_description: "Install and configure consul-template on your system."
@@ -15,9 +14,9 @@ argument_specs:
         description: "List of configuration for templates"
       consul_template_install_package:
         type: "bool"
-        default: True
+        default: true
         description: "Install consul-template?"
       consul_template_remove_unmanaged:
         type: "bool"
-        default: False
+        default: false
         description: "Delete other files in the directory of a consul-template generated file"
