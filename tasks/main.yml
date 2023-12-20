@@ -1,0 +1,82 @@
+---
+# tasks file for nomad
+
+- name: Import assert.yml
+  ansible.builtin.import_tasks: assert.yml
+  run_once: true
+  delegate_to: localhost
+
+- name: Install consul-template
+  ansible.builtin.package:
+    name: consul-template
+    state: present
+  when:
+    - consul_template_install_package
+
+- name: Create consul-template configuration directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "600"
+  with_items:
+    - "{{ consul_template_config_dir }}"
+    - "{{ consul_template_config_dir }}/templates"
+
+- name: Configure consul-template
+  notify:
+    - Restart consul-template
+  block:
+    - name: Copy consul-template service
+      ansible.builtin.copy:
+        src: "files/consul-template.service"
+        dest: "/lib/systemd/system/consul-template.service"
+        mode: "0750"
+
+    - name: Copy consul-template config
+      ansible.builtin.template:
+        src: templates/consul-template.hcl.j2
+        dest: "{{ consul_template_config_dir }}/config.hcl"
+        mode: "600"
+
+    - name: Copy consul-template items
+      ansible.builtin.copy:
+        src: "{{ item.template_file }}"
+        dest: "{{ item.source }}"
+        mode: "600"
+      with_items: "{{ consul_template_templates_config }}"
+
+    - name: Create list of managed items
+      ansible.builtin.set_fact:
+        managed_config: "{{ managed_config | default({}) | combine({(item.destination | dirname): managed_config[(item.destination | dirname)] | default([]) + [item.destination | basename]}) }}"
+      with_items: "{{ consul_template_templates_config }}"
+      when:
+        - consul_template_remove_unmanaged is true
+
+    - name: Capture unwanted files
+      ansible.builtin.find:
+        paths: "{{ item.key }}"
+        file_type: file
+        excludes: "{{ item.value }}"
+      register: unwanted_files
+      loop: "{{ managed_config | dict2items }}"
+      when:
+        - consul_template_remove_unmanaged is true
+
+    - name: Delete unwanted files
+      ansible.builtin.file:
+        path: "{{ item.1.path }}"
+        state: absent
+      loop: "{{ unwanted_files.results | subelements('files') }}"
+      loop_control:
+        label: "{{ item.1.path }}"
+      when:
+        - consul_template_remove_unmanaged is true
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Start consul-template
+  ansible.builtin.service:
+    name: consul-template
+    state: started
+    enabled: true

@@ -1,0 +1,22 @@
+---
+profile: production
+
+exclude_paths:
+  - .ansible/collections
+  - .ansible/roles
+  - .cache
+  - .github
+  - .tox
+  - meta/preferences.yml
+  - molecule/default/collections.yml
+  - molecule/default/converge.yml
+  - molecule/default/defaults.yml
+  - molecule/default/prepare.yml
+  - molecule/default/verify.yml
+  - requirements.yml
+
+skip_list:
+  - meta-no-info
+  - template-instead-of-copy
+  - var-naming[no-role-prefix]
+  - yaml[comments-indentation]

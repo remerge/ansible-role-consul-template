@@ -1,0 +1,30 @@
+consul {
+  address = "{{ consul_address }}"
+
+  retry {
+    enabled  = true
+    attempts = 12
+    backoff  = "250ms"
+  }
+}
+
+{% for template_item in consul_template_templates_config %}
+template {
+  source      = "{{ template_item.source }}"
+  destination = "{{ template_item.destination }}"
+  perms       = {{ template_item.perms }}
+  exec {
+      command = [ "{{ template_item.command }}" ]
+      splay = "{{ template_item.splay }}"
+  }
+  user        = "{{ template_item.user }}"
+  group       = "{{ template_item.group }}"
+}
+{% endfor %}
+
+syslog {
+  enabled  = true
+
+  # This is the name of the syslog facility to log to.
+  facility = "LOCAL5"
+}

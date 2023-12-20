@@ -1,0 +1,7 @@
+---
+# handlers file for consul-template
+
+- name: Restart consul-template
+  ansible.builtin.systemd:
+    name: consul-template
+    state: restarted
