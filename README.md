@@ -4,7 +4,6 @@ Install consul-template repository and packages with Ansible.
 
 ## [Example Playbook](#example-playbook)
 
-
 ```yaml
 ---
 - name: Setup Consul-template
