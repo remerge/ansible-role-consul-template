@@ -66,7 +66,7 @@
       ansible.builtin.file:
         path: "{{ item.1.path }}"
         state: absent
-      loop: "{{ unwanted_files.results | subelements('files') }}"
+      loop: "{{ unwanted_files.results | d([]) | subelements('files') }}"
       loop_control:
         label: "{{ item.1.path }}"
       when:
