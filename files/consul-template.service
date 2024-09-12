@@ -9,7 +9,7 @@ StartLimitBurst=3
 [Service]
 User=root
 Group=root
-ExecStart=/usr/bin/consul-template -config=/etc/consul-template/config.hcl
+ExecStart=/usr/bin/consul-template -log-level=info -template-error-fatal=false -config=/etc/consul-template
 ExecReload=/bin/kill --signal HUP $MAINPID
 KillMode=process
 KillSignal=SIGINT
