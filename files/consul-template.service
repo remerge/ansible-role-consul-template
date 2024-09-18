@@ -8,7 +8,7 @@ StartLimitBurst=6
 [Service]
 User=root
 Group=root
-ExecStart=/usr/bin/consul-template -log-level=info -template-error-fatal=false -config=/etc/consul-template
+ExecStart=/usr/bin/consul-template -log-level=info -template-error-fatal=false -config=/etc/consul-template/config/
 ExecReload=/bin/kill --signal HUP $MAINPID
 KillMode=process
 KillSignal=SIGINT

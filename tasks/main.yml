@@ -18,6 +18,7 @@
     mode: "600"
   with_items:
     - "{{ consul_template_config_dir }}"
+    - "{{ consul_template_config_dir }}/config"
     - "{{ consul_template_config_dir }}/templates"
 
 - name: Configure consul-template
@@ -38,7 +39,7 @@
     - name: Copy consul-template config
       ansible.builtin.template:
         src: templates/consul.hcl.j2
-        dest: "{{ consul_template_config_dir }}/consul.hcl"
+        dest: "{{ consul_template_config_dir }}/config/consul.hcl"
         mode: "600"
 
 - name: Flush handlers
