@@ -2,9 +2,8 @@
 Description=Consul Template service
 Requires=network-online.target
 After=network-online.target
-ConditionFileNotEmpty=/etc/consul-template/config.hcl
 StartLimitIntervalSec=60
-StartLimitBurst=3
+StartLimitBurst=6
 
 [Service]
 User=root
