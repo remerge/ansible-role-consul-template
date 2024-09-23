@@ -1,0 +1,9 @@
+consul {
+  address = "{{ consul_template_consul_address }}"
+
+  retry {
+    enabled  = true
+    attempts = 12
+    backoff  = "250ms"
+  }
+}
