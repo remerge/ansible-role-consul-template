@@ -6,17 +6,6 @@ argument_specs:
       Install and configure consul-template on your system.
     author: remerge
     options:
-      consul_address:
+      consul_template_consul_address:
         type: "str"
         description: "Consul http address"
-      consul_template_templates_config:
-        type: "list"
-        description: "List of configuration for templates"
-      consul_template_install_package:
-        type: "bool"
-        default: true
-        description: "Install consul-template?"
-      consul_template_remove_unmanaged:
-        type: "bool"
-        default: false
-        description: "Delete other files in the directory of a consul-template generated file"

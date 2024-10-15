@@ -1,7 +1,3 @@
 ---
-# defaults file for consul-template
-
-consul_template_install_package: true
-consul_template_remove_unmanaged: false
 consul_template_config_dir: /etc/consul-template
-consul_address: "localhost:8500"
+consul_template_consul_address: "localhost:8500"

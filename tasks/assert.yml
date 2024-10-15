@@ -1,51 +1,7 @@
 ---
-- name: assert | Test if consul_address is set correctly
+- name: assert | Test if consul_template_consul_address is set correctly
   ansible.builtin.assert:
     that:
-      - consul_address is defined
-      - consul_address is string
+      - consul_template_consul_address is defined
+      - consul_template_consul_address is string
     quiet: true
-
-- name: assert | Test if consul_template_install_package is set correctly
-  ansible.builtin.assert:
-    that:
-      - consul_template_install_package is defined
-      - consul_template_install_package is boolean
-    quiet: true
-
-- name: assert | Test if consul_template_remove_unmanaged is set correctly
-  ansible.builtin.assert:
-    that:
-      - consul_template_remove_unmanaged is defined
-      - consul_template_remove_unmanaged is boolean
-    quiet: true
-
-- name: assert | Test item in consul_template_templates_config
-  ansible.builtin.assert:
-    that:
-      - item.source is defined
-      - item.source is string
-      - item.source is not none
-      - item.destination is defined
-      - item.destination is string
-      - item.destination is not none
-      - item.template_file is defined
-      - item.template_file is string
-      - item.template_file is not none
-      - item.perms is defined
-      - item.perms is number
-      - item.command is defined
-      - item.command is string
-      - item.command is not none
-      - item.user is defined
-      - item.user is string
-      - item.user is not none
-      - item.group is defined
-      - item.group is string
-      - item.group is not none
-      - item.splay is not none
-      - item.splay is string
-    quiet: true
-  loop: "{{ consul_template_templates_config }}"
-  loop_control:
-    label: "{{ item.source }}"
