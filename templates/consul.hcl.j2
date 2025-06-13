@@ -2,7 +2,7 @@ consul {
   address = "{{ consul_template_consul_address }}"
 
   limits {
-    http_max_conns_per_client = 1000
+    http_max_conns_per_client = {{ consul_http_max_conns_per_client }}
   }
 
   retry {

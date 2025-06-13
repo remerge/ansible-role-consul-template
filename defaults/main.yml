@@ -1,3 +1,4 @@
 ---
 consul_template_config_dir: /etc/consul-template
 consul_template_consul_address: "localhost:8500"
+consul_http_max_conns_per_client: 1000
