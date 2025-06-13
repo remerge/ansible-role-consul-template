@@ -1,6 +1,10 @@
 consul {
   address = "{{ consul_template_consul_address }}"
 
+  limits {
+    http_max_conns_per_client = 1000
+  }
+
   retry {
     enabled  = true
     attempts = 12
