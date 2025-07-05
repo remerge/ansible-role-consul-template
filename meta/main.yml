@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   role_name: consul_template
-  description: Ansible role for Consul-template
+  description: Ansible Role for Consul Template
   license: apache-2.0
   author: remerge
   company: remerge.io

@@ -1,5 +1,5 @@
 PROJECT_ID := ansible-role-consul-template
-PROJECT_NAME := Ansible role for Consul-template
+PROJECT_NAME := Ansible Role for Consul Template
 PROJECT_REPO := github.com/remerge/$(PROJECT_ID)
 
 # Provide local development fallbacks if there are no CI variables
